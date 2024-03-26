@@ -39,15 +39,15 @@ public class CustomerRepository : ICustomerRepository
         var getItemRequest = new GetItemRequest
         {
             TableName = _tableName,
-            Key = new Dictionary<string, AttributeValue> 
+            Key = new Dictionary<string, AttributeValue>
             {
-                ["pk"] = new AttributeValue(s: id.ToString()),
-                ["sk"] = new AttributeValue(s: id.ToString())
+                { "pk", new AttributeValue { S = id.ToString() } },
+                { "sk", new AttributeValue { S = id.ToString() } }
             }
         };
 
         var response = await _dynamoDb.GetItemAsync(getItemRequest);
-        if(response.Item.Count == 0)
+        if (response.Item.Count == 0)
         {
             return null;
         }
@@ -65,10 +65,12 @@ public class CustomerRepository : ICustomerRepository
             KeyConditionExpression = "Email = :v_Email",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                [":v_Email"] = new AttributeValue(s: email)
+                {
+                    ":v_Email", new AttributeValue{ S = email }
+                }
             }
         };
-
+        
         var response = await _dynamoDb.QueryAsync(queryRequest);
         if (response.Items.Count == 0)
         {
@@ -85,13 +87,12 @@ public class CustomerRepository : ICustomerRepository
         {
             TableName = _tableName
         };
-
         var response = await _dynamoDb.ScanAsync(scanRequest);
         return response.Items.Select(x =>
         {
-            var itemAsDocument = Document.FromAttributeMap(x);
-            return JsonSerializer.Deserialize<CustomerDto>(itemAsDocument.ToJson())!;
-        });
+            var json = Document.FromAttributeMap(x).ToJson();
+            return JsonSerializer.Deserialize<CustomerDto>(json);
+        })!;
     }
 
     public async Task<bool> UpdateAsync(CustomerDto customer, DateTime requestStarted)
@@ -107,7 +108,7 @@ public class CustomerRepository : ICustomerRepository
             ConditionExpression = "UpdatedAt < :requestStarted",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                [":requestStarted"] = new AttributeValue(s: requestStarted.ToString("O"))
+                { ":requestStarted", new AttributeValue{S = requestStarted.ToString("O")} }
             }
         };
 
@@ -117,17 +118,17 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var deleteItemRequest = new DeleteItemRequest
+        var deletedItemRequest = new DeleteItemRequest
         {
             TableName = _tableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                ["pk"] = new AttributeValue(s: id.ToString()),
-                ["sk"] = new AttributeValue(s: id.ToString())
+                { "pk", new AttributeValue { S = id.ToString() } },
+                { "sk", new AttributeValue { S = id.ToString() } }
             }
         };
 
-        var response = await _dynamoDb.DeleteItemAsync(deleteItemRequest);
+        var response = await _dynamoDb.DeleteItemAsync(deletedItemRequest);
         return response.HttpStatusCode == HttpStatusCode.OK;
     }
 }

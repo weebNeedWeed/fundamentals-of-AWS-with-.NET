@@ -56,9 +56,8 @@ public class CustomerService : ICustomerService
         return customerDtos.Select(x => x.ToCustomer());
     }
 
-    public async Task<bool> UpdateAsync(Customer customer)
+    public async Task<bool> UpdateAsync(Customer customer, DateTime requestStarted)
     {
-        var requestStarted = DateTime.UtcNow;
         var customerDto = customer.ToCustomerDto();
         
         var isValidGitHubUser = await _gitHubService.IsValidGitHubUser(customer.GitHubUsername);

@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnsPublisher", "4.Sns\SnsPu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.Api", "5.DynamoDb\Customers.Api\Customers.Api.csproj", "{695C7EC0-70CC-4A68-A9ED-2E13CB7E0E6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Api", "5.DynamoDb\Movies.Api\Movies.Api.csproj", "{1E3BFA9B-C1DA-4DCF-8CA5-343474FAA4D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.App", "5.DynamoDb\Movies.App\Movies.App.csproj", "{1E3BFA9B-C1DA-4DCF-8CA5-343474FAA4D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
